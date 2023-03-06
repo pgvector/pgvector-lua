@@ -6,8 +6,8 @@ end
 
 function pgvector.deserialize(v)
   local res = {}
-  for v in string.gmatch(string.sub(value, 2, -2), "[^,]+") do
-    table.insert(res, v)
+  for x in string.gmatch(string.sub(v, 2, -2), "[^,]+") do
+    table.insert(res, x)
   end
   return res
 end

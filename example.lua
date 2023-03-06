@@ -1,4 +1,6 @@
 local pgmoon = require("pgmoon")
+local pgvector = require("./pgvector")
+
 local pg = pgmoon.new({
   database = "pgvector_lua_test",
   user = os.getenv("USER")
@@ -9,11 +11,6 @@ assert(pg:query("CREATE EXTENSION IF NOT EXISTS vector"))
 assert(pg:query("DROP TABLE IF EXISTS items"))
 
 assert(pg:query("CREATE TABLE items (embedding vector(3))"))
-
-local pgvector = {}
-function pgvector.serialize(v)
-  return "[" .. table.concat(v, ",") .. "]"
-end
 
 embedding1 = pgvector.serialize({1, 1, 1})
 embedding2 = pgvector.serialize({2, 2, 2})

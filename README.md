@@ -8,11 +8,23 @@ Supports [pgmoon](https://github.com/leafo/pgmoon)
 
 ## Getting Started
 
-Follow the instructions for your database library:
+Run:
+
+```sh
+luarocks install pgvector
+```
+
+And follow the instructions for your database library:
 
 - [pgmoon](#pgmoon)
 
 ## pgmoon
+
+Require the library
+
+```lua
+local pgvector = require("pgvector")
+```
 
 Create a table
 
@@ -23,11 +35,6 @@ pg:query("CREATE TABLE items (embedding vector(3))")
 Insert a vector
 
 ```lua
-local pgvector = {}
-function pgvector.serialize(v)
-  return "[" .. table.concat(v, ",") .. "]"
-end
-
 embedding = pgvector.serialize({1, 1, 1})
 pg:query("INSERT INTO items (embedding) VALUES ($1::vector)", embedding)
 ```

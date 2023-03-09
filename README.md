@@ -71,5 +71,5 @@ cd pgvector-lua
 createdb pgvector_lua_test
 luarocks install pgmoon
 luarocks install luasocket
-lua example.lua
+lua test/example.lua
 ```

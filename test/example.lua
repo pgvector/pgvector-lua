@@ -1,5 +1,5 @@
 local pgmoon = require("pgmoon")
-local pgvector = require("./pgvector")
+local pgvector = require("./src/pgvector")
 
 local pg = pgmoon.new({
   database = "pgvector_lua_test",

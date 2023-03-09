@@ -1,6 +1,9 @@
 local pgvector = {}
 
 function pgvector.serialize(v)
+  for _, v in ipairs(v) do
+    assert(type(v) == "number")
+  end
   return "[" .. table.concat(v, ",") .. "]"
 end
 

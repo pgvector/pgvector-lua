@@ -1,6 +1,6 @@
 # pgvector-lua
 
-[pgvector](https://github.com/pgvector/pgvector) examples for Lua
+[pgvector](https://github.com/pgvector/pgvector) support for Lua
 
 Supports [pgmoon](https://github.com/leafo/pgmoon)
 

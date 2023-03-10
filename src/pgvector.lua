@@ -1,5 +1,19 @@
 local pgvector = {}
 
+local vector_mt = {
+  pgmoon_serialize = function(v)
+    return 0, pgvector.serialize(v)
+  end
+}
+
+function pgvector.new(v)
+  local vec = {}
+  for _, x in ipairs(v) do
+    table.insert(vec, x)
+  end
+  return setmetatable(vec, vector_mt)
+end
+
 function pgvector.serialize(v)
   for _, v in ipairs(v) do
     assert(type(v) == "number")
@@ -12,7 +26,8 @@ function pgvector.deserialize(v)
   for x in string.gmatch(string.sub(v, 2, -2), "[^,]+") do
     table.insert(res, tonumber(x))
   end
-  return res
+  -- pgvector.new without copy
+  return setmetatable(vec, vector_mt)
 end
 
 function pgvector.setup_vector(pg)

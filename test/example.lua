@@ -12,16 +12,16 @@ assert(pg:query("DROP TABLE IF EXISTS items"))
 
 assert(pg:query("CREATE TABLE items (embedding vector(3))"))
 
-embedding1 = pgvector.serialize({1, 1, 1})
-embedding2 = pgvector.serialize({2, 2, 2})
-embedding3 = pgvector.serialize({1, 1, 2})
-assert(pg:query("INSERT INTO items (embedding) VALUES ($1::vector), ($2::vector), ($3::vector)", embedding1, embedding2, embedding3))
+embedding1 = pgvector.new({1, 1, 1})
+embedding2 = pgvector.new({2, 2, 2})
+embedding3 = pgvector.new({1, 1, 2})
+assert(pg:query("INSERT INTO items (embedding) VALUES ($1), ($2), ($3)", embedding1, embedding2, embedding3))
 
 -- optional: automatically convert vector type to table
 -- pgvector.setup_vector(pg)
 
-embedding = pgvector.serialize({1, 1, 1})
-local res = assert(pg:query("SELECT * FROM items ORDER BY embedding <-> $1::vector LIMIT 5", embedding))
+embedding = pgvector.new({1, 1, 1})
+local res = assert(pg:query("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", embedding))
 for i, row in ipairs(res) do
   for k, v in pairs(row) do
     print(k, v)

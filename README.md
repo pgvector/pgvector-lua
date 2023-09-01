@@ -54,7 +54,9 @@ end
 Add an approximate index
 
 ```lua
-pg:query("CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops)")
+pg:query("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
+-- or
+pg:query("CREATE INDEX ON items USING hnsw (embedding)")
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance

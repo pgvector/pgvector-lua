@@ -26,6 +26,12 @@ Require the library
 local pgvector = require("pgvector")
 ```
 
+Enable the extension
+
+```lua
+pg:query("CREATE EXTENSION IF NOT EXISTS vector")
+```
+
 Create a table
 
 ```lua

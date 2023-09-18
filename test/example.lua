@@ -10,7 +10,7 @@ assert(pg:connect())
 assert(pg:query("CREATE EXTENSION IF NOT EXISTS vector"))
 assert(pg:query("DROP TABLE IF EXISTS items"))
 
-assert(pg:query("CREATE TABLE items (embedding vector(3))"))
+assert(pg:query("CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))"))
 
 embedding1 = pgvector.new({1, 1, 1})
 embedding2 = pgvector.new({2, 2, 2})
@@ -28,4 +28,4 @@ for i, row in ipairs(res) do
   end
 end
 
-assert(pg:query("CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops)"))
+assert(pg:query("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)"))

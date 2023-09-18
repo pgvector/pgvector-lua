@@ -35,7 +35,7 @@ pg:query("CREATE EXTENSION IF NOT EXISTS vector")
 Create a table
 
 ```lua
-pg:query("CREATE TABLE items (embedding vector(3))")
+pg:query("CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))")
 ```
 
 Insert a vector

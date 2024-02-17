@@ -4,7 +4,7 @@
 
 Supports [pgmoon](https://github.com/leafo/pgmoon)
 
-[![Build Status](https://github.com/pgvector/pgvector-lua/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-lua/actions)
+[![Build Status](https://github.com/pgvector/pgvector-lua/actions/workflows/build.yml/badge.svg)](https://github.com/pgvector/pgvector-lua/actions)
 
 ## Getting Started
 

@@ -41,14 +41,14 @@ pg:query("CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))")
 Insert a vector
 
 ```lua
-embedding = pgvector.new({1, 1, 1})
+local embedding = pgvector.new({1, 1, 1})
 pg:query("INSERT INTO items (embedding) VALUES ($1)", embedding)
 ```
 
 Get the nearest neighbors
 
 ```lua
-embedding = pgvector.new({1, 1, 1})
+local embedding = pgvector.new({1, 1, 1})
 local res = pg:query("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", embedding)
 for i, row in ipairs(res) do
   for k, v in pairs(row) do

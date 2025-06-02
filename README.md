@@ -18,9 +18,10 @@ And follow the instructions for your database library:
 
 - [pgmoon](#pgmoon)
 
-Or check out an example:
+Or check out some examples:
 
 - [Embeddings](examples/openai/example.lua) with OpenAI
+- [Binary embeddings](examples/cohere/example.lua) with Cohere
 
 ## pgmoon
 

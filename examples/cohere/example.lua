@@ -56,14 +56,14 @@ local documents = {
   "The cat is purring",
   "The bear is growling"
 }
-local embeddings = embed(documents)
+local embeddings = embed(documents, "search_document")
 for i, content in ipairs(documents) do
   local embedding = embeddings[i]
   assert(pg:query("INSERT INTO documents (content, embedding) VALUES ($1, $2::text::varbit)", content, embedding))
 end
 
 local query = "forest"
-local embedding = embed({query})[1]
+local embedding = embed({query}, "search_query")[1]
 local res = assert(pg:query("SELECT content FROM documents ORDER BY embedding <~> $1::text::varbit LIMIT 5", embedding))
 for i, row in ipairs(res) do
   print(row["content"])

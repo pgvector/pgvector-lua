@@ -18,6 +18,10 @@ And follow the instructions for your database library:
 
 - [pgmoon](#pgmoon)
 
+Or check out an example:
+
+- [Embeddings](examples/openai/example.lua) with OpenAI
+
 ## pgmoon
 
 Require the library
@@ -91,4 +95,13 @@ createdb pgvector_lua_test
 luarocks install pgmoon
 luarocks install luasocket
 lua test/example.lua
+```
+
+To run an example:
+
+```sh
+createdb pgvector_example
+luarocks install luasec
+luarocks install lua-cjson
+lua examples/openai/example.lua
 ```

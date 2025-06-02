@@ -25,6 +25,7 @@ function embed(input)
     ["Authorization"] = "Bearer " .. api_key,
     ["Content-Type"] = "application/json"
   }
+
   local chunks = {}
   local r, c, h = http.request {
     method = "POST",
@@ -34,9 +35,10 @@ function embed(input)
     sink = ltn12.sink.table(chunks)
   }
   assert(c == 200)
-  local data = cjson.decode(table.concat(chunks))["data"]
+  local res = cjson.decode(table.concat(chunks))
+
   local embeddings = {}
-  for i, object in ipairs(data) do
+  for i, object in ipairs(res["data"]) do
     embeddings[i] = object["embedding"]
   end
   return embeddings

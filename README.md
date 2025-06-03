@@ -23,6 +23,7 @@ Or check out some examples:
 - [Embeddings](examples/openai/example.lua) with OpenAI
 - [Binary embeddings](examples/cohere/example.lua) with Cohere
 - [Hybrid search](examples/hybrid/example.lua) with Ollama (Reciprocal Rank Fusion)
+- [Sparse search](examples/sparse/example.lua) with Text Embeddings Inference
 
 ## pgmoon
 

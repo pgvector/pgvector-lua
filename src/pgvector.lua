@@ -22,9 +22,9 @@ function pgvector.serialize(v)
 end
 
 function pgvector.deserialize(v)
-  local res = {}
+  local vec = {}
   for x in string.gmatch(string.sub(v, 2, -2), "[^,]+") do
-    table.insert(res, tonumber(x))
+    table.insert(vec, tonumber(x))
   end
   -- pgvector.new without copy
   return setmetatable(vec, vector_mt)

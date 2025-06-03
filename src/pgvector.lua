@@ -31,7 +31,7 @@ function pgvector.deserialize(v)
 end
 
 function pgvector.setup_vector(pg)
-  local res = table.unpack(pg:query("SELECT oid FROM pg_type WHERE typname = 'vector'"))
+  local res = table.unpack(pg:query("SELECT to_regtype('vector')::oid AS oid"))
   assert(res, "vector oid not found")
   pg:set_type_deserializer(res.oid, "vector", function(self, v) return pgvector.deserialize(v) end)
 end

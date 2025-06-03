@@ -18,14 +18,13 @@ local embedding3 = pgvector.new({1, 1, 2})
 assert(pg:query("INSERT INTO items (embedding) VALUES ($1), ($2), ($3)", embedding1, embedding2, embedding3))
 
 -- optional: automatically convert vector type to table
--- pgvector.setup_vector(pg)
+pgvector.setup_vector(pg)
 
 local embedding = pgvector.new({1, 1, 1})
 local res = assert(pg:query("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", embedding))
 for i, row in ipairs(res) do
-  for k, v in pairs(row) do
-    print(k, v)
-  end
+  print(row["id"])
+  print(row["embedding"])
 end
 
 assert(pg:query("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)"))

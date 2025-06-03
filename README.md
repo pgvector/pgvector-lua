@@ -58,9 +58,7 @@ Get the nearest neighbors
 local embedding = pgvector.new({1, 1, 1})
 local res = pg:query("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", embedding)
 for i, row in ipairs(res) do
-  for k, v in pairs(row) do
-    print(k, v)
-  end
+  print(row["id"])
 end
 ```
 

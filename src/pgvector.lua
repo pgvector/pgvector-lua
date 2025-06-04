@@ -79,9 +79,10 @@ function pgvector.sparsevec(elements, dim)
   end
   assert(type(dim) == "number")
 
-  local vec = {}
-  vec["elements"] = elements
-  vec["dim"] = dim
+  local vec = {
+    elements = elements,
+    dim = dim
+  }
   return setmetatable(vec, sparsevec_mt)
 end
 
@@ -102,10 +103,11 @@ function sparsevec_deserialize(v)
     local value = tonumber(mx())
     elements[index] = value
   end
-  local vec = {}
-  vec["elements"] = elements
-  vec["dim"] = tonumber(m())
-  return vec
+  local vec = {
+    elements = elements,
+    dim = tonumber(m())
+  }
+  return setmetatable(vec, sparsevec_mt)
 end
 
 -- register

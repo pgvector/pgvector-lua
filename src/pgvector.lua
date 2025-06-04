@@ -94,7 +94,18 @@ function sparsevec_serialize(vec)
 end
 
 function sparsevec_deserialize(v)
-  -- TODO
+  local m = string.gmatch(v, "[^/]+")
+  local elements = {}
+  for e in string.gmatch(string.sub(m(), 2, -2), "[^,]+") do
+    local mx = string.gmatch(e, "[^:]+")
+    local index = tonumber(mx())
+    local value = tonumber(mx())
+    elements[index] = value
+  end
+  local vec = {}
+  vec["elements"] = elements
+  vec["dim"] = tonumber(m())
+  return vec
 end
 
 -- register
@@ -106,9 +117,9 @@ function pgvector.setup_vector(pg)
   if row["halfvec_oid"] then
     pg:set_type_deserializer(row["halfvec_oid"], "halfvec", function(self, v) return halfvec_deserialize(v) end)
   end
-  -- if row["sparsevec_oid"] then
-  --   pg:set_type_deserializer(row["sparsevec_oid"], "sparsevec", function(self, v) return sparsevec_deserialize(v) end)
-  -- end
+  if row["sparsevec_oid"] then
+    pg:set_type_deserializer(row["sparsevec_oid"], "sparsevec", function(self, v) return sparsevec_deserialize(v) end)
+  end
 end
 
 return pgvector

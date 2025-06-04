@@ -1,6 +1,7 @@
 ## 0.2.0 (unreleased)
 
 - Added support for `halfvec` and `sparsevec` types
+- Fixed error with `deserialize` function
 
 ## 0.1.1 (2023-03-09)
 

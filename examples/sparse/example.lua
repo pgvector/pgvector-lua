@@ -9,6 +9,7 @@ local cjson = require("cjson")
 local http = require("socket.http")
 local ltn12 = require("ltn12")
 local pgmoon = require("pgmoon")
+local pgvector = require("./src/pgvector")
 
 local pg = pgmoon.new({
   database = "pgvector_example",
@@ -19,14 +20,6 @@ assert(pg:connect())
 assert(pg:query("CREATE EXTENSION IF NOT EXISTS vector"))
 assert(pg:query("DROP TABLE IF EXISTS documents"))
 assert(pg:query("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding sparsevec(30522))"))
-
-function sparsevec(elements, dim)
-  local e = {}
-  for k, v in pairs(elements) do
-    table.insert(e, k .. ":" .. v)
-  end
-  return "{" .. table.concat(e, ",") .. "}/" .. dim
-end
 
 function embed(inputs)
   local url = "http://localhost:3000/embed_sparse"
@@ -67,12 +60,12 @@ local documents = {
 local embeddings = embed(documents)
 for i, content in ipairs(documents) do
   local embedding = embeddings[i]
-  assert(pg:query("INSERT INTO documents (content, embedding) VALUES ($1, $2::text::sparsevec)", content, sparsevec(embedding, 30522)))
+  assert(pg:query("INSERT INTO documents (content, embedding) VALUES ($1, $2)", content, pgvector.sparsevec(embedding, 30522)))
 end
 
 local query = "forest"
 local embedding = embed({query})[1]
-local res = assert(pg:query("SELECT content FROM documents ORDER BY embedding <#> $1::text::sparsevec LIMIT 5", sparsevec(embedding, 30522)))
+local res = assert(pg:query("SELECT content FROM documents ORDER BY embedding <#> $1 LIMIT 5", pgvector.sparsevec(embedding, 30522)))
 for i, row in ipairs(res) do
   print(row["content"])
 end

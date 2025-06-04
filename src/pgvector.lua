@@ -6,6 +6,12 @@ local vector_mt = {
   end
 }
 
+local sparsevec_mt = {
+  pgmoon_serialize = function(v)
+    return 0, sparsevec_serialize(v)
+  end
+}
+
 function pgvector.new(v)
   local vec = {}
   for _, x in ipairs(v) do
@@ -30,10 +36,38 @@ function pgvector.deserialize(v)
   return setmetatable(vec, vector_mt)
 end
 
+function pgvector.sparsevec(elements, dim)
+  for k, v in pairs(elements) do
+    assert(type(k) == "number")
+    assert(type(v) == "number")
+  end
+  assert(type(dim) == "number")
+
+  local vec = {}
+  vec["elements"] = elements
+  vec["dim"] = dim
+  return setmetatable(vec, sparsevec_mt)
+end
+
+function sparsevec_serialize(vec)
+  local elements = {}
+  for i, v in pairs(vec["elements"]) do
+    table.insert(elements, tonumber(i) .. ":" .. tonumber(v))
+  end
+  return "{" .. table.concat(elements, ",") .. "}/" .. tonumber(vec["dim"])
+end
+
+function sparsevec_deserialize(v)
+  -- TODO
+end
+
 function pgvector.setup_vector(pg)
-  local row = pg:query("SELECT to_regtype('vector')::oid AS vector_oid")[1]
+  local row = pg:query("SELECT to_regtype('vector')::oid AS vector_oid, to_regtype('sparsevec')::oid AS sparsevec_oid")[1]
   assert(row["vector_oid"], "vector type not found in the database")
   pg:set_type_deserializer(row["vector_oid"], "vector", function(self, v) return pgvector.deserialize(v) end)
+  -- if row["sparsevec_oid"] do
+  --   pg:set_type_deserializer(row["sparsevec_oid"], "sparsevec", function(self, v) return sparsevec_deserialize(v) end)
+  -- end
 end
 
 return pgvector

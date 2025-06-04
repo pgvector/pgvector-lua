@@ -1,20 +1,10 @@
 local pgvector = {}
 
+-- vector
+
 local vector_mt = {
   pgmoon_serialize = function(v)
     return 0, pgvector.serialize(v)
-  end
-}
-
-local halfvec_mt = {
-  pgmoon_serialize = function(v)
-    return 0, halfvec_serialize(v)
-  end
-}
-
-local sparsevec_mt = {
-  pgmoon_serialize = function(v)
-    return 0, sparsevec_serialize(v)
   end
 }
 
@@ -42,6 +32,14 @@ function pgvector.deserialize(v)
   return setmetatable(vec, vector_mt)
 end
 
+-- halfvec
+
+local halfvec_mt = {
+  pgmoon_serialize = function(v)
+    return 0, halfvec_serialize(v)
+  end
+}
+
 function pgvector.halfvec(v)
   local vec = {}
   for _, x in ipairs(v) do
@@ -65,6 +63,14 @@ function halfvec_deserialize(v)
   -- pgvector.halfvec without copy
   return setmetatable(vec, halfvec_mt)
 end
+
+-- sparsevec
+
+local sparsevec_mt = {
+  pgmoon_serialize = function(v)
+    return 0, sparsevec_serialize(v)
+  end
+}
 
 function pgvector.sparsevec(elements, dim)
   for k, v in pairs(elements) do
@@ -90,6 +96,8 @@ end
 function sparsevec_deserialize(v)
   -- TODO
 end
+
+-- register
 
 function pgvector.setup_vector(pg)
   local row = pg:query("SELECT to_regtype('vector')::oid AS vector_oid, to_regtype('halfvec')::oid AS halfvec_oid, to_regtype('sparsevec')::oid AS sparsevec_oid")[1]

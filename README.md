@@ -74,6 +74,37 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 
 See a [full example](test/example.lua)
 
+## Reference
+
+### Half Vectors
+
+Create a half vector from a table
+
+```lua
+local vec = pgvector.halfvec({1, 2, 3})
+```
+
+### Sparse Vectors
+
+Create a sparse vector from a table of non-zero elements
+
+```lua
+local elements = {[1] = 1, [3] = 2, [5] = 3}
+local vec = pgvector.sparsevec(elements, 6)
+```
+
+Get the number of dimensions
+
+```lua
+vec["dim"]
+```
+
+Get the non-zero elements
+
+```lua
+vec["elements"]
+```
+
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-lua/blob/master/CHANGELOG.md)

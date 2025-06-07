@@ -1,4 +1,4 @@
-## 0.2.0 (unreleased)
+## 0.2.0 (2025-06-07)
 
 - Added support for `halfvec` and `sparsevec` types
 - Fixed error with `deserialize` function

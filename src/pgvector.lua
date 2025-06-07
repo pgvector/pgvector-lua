@@ -5,7 +5,7 @@ local pgvector = {}
 local vector_mt = {
   pgmoon_serialize = function(v)
     return 0, pgvector.serialize(v)
-  end
+  end,
 }
 
 function pgvector.new(v)
@@ -53,7 +53,7 @@ end
 local halfvec_mt = {
   pgmoon_serialize = function(v)
     return 0, halfvec_serialize(v)
-  end
+  end,
 }
 
 function pgvector.halfvec(v)
@@ -85,7 +85,7 @@ local function sparsevec_deserialize(v)
   end
   local vec = {
     elements = elements,
-    dim = tonumber(m())
+    dim = tonumber(m()),
   }
   return setmetatable(vec, sparsevec_mt)
 end
@@ -93,7 +93,7 @@ end
 local sparsevec_mt = {
   pgmoon_serialize = function(v)
     return 0, sparsevec_serialize(v)
-  end
+  end,
 }
 
 function pgvector.sparsevec(elements, dim)
@@ -105,7 +105,7 @@ function pgvector.sparsevec(elements, dim)
 
   local vec = {
     elements = elements,
-    dim = dim
+    dim = dim,
   }
   return setmetatable(vec, sparsevec_mt)
 end
@@ -113,14 +113,22 @@ end
 -- register
 
 function pgvector.setup_vector(pg)
-  local row = pg:query("SELECT to_regtype('vector')::oid AS vector_oid, to_regtype('halfvec')::oid AS halfvec_oid, to_regtype('sparsevec')::oid AS sparsevec_oid")[1]
+  local row = pg:query(
+    "SELECT to_regtype('vector')::oid AS vector_oid, to_regtype('halfvec')::oid AS halfvec_oid, to_regtype('sparsevec')::oid AS sparsevec_oid"
+  )[1]
   assert(row["vector_oid"], "vector type not found in the database")
-  pg:set_type_deserializer(row["vector_oid"], "vector", function(self, v) return pgvector.deserialize(v) end)
+  pg:set_type_deserializer(row["vector_oid"], "vector", function(self, v)
+    return pgvector.deserialize(v)
+  end)
   if row["halfvec_oid"] then
-    pg:set_type_deserializer(row["halfvec_oid"], "halfvec", function(self, v) return halfvec_deserialize(v) end)
+    pg:set_type_deserializer(row["halfvec_oid"], "halfvec", function(self, v)
+      return halfvec_deserialize(v)
+    end)
   end
   if row["sparsevec_oid"] then
-    pg:set_type_deserializer(row["sparsevec_oid"], "sparsevec", function(self, v) return sparsevec_deserialize(v) end)
+    pg:set_type_deserializer(row["sparsevec_oid"], "sparsevec", function(self, v)
+      return sparsevec_deserialize(v)
+    end)
   end
 end
 

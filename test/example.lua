@@ -17,7 +17,7 @@ local embedding2 = pgvector.new({2, 2, 2})
 local embedding3 = pgvector.new({1, 1, 2})
 assert(pg:query("INSERT INTO items (embedding) VALUES ($1), ($2), ($3)", embedding1, embedding2, embedding3))
 
--- optional: automatically convert vector type to table
+-- optional: automatically deserialize vector types
 pgvector.setup_vector(pg)
 
 local embedding = pgvector.new({1, 1, 1})

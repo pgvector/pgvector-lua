@@ -16,6 +16,7 @@ assert(pg:query("CREATE TABLE documents (id bigserial PRIMARY KEY, content text,
 
 function embed(input)
   local api_key = os.getenv("OPENAI_API_KEY")
+  assert(api_key, "Set OPENAI_API_KEY")
   local url = "https://api.openai.com/v1/embeddings"
   local data = {
     input = input,

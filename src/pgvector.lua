@@ -34,6 +34,22 @@ end
 
 -- halfvec
 
+local function halfvec_serialize(v)
+  for _, v in ipairs(v) do
+    assert(type(v) == "number")
+  end
+  return "[" .. table.concat(v, ",") .. "]"
+end
+
+local function halfvec_deserialize(v)
+  local vec = {}
+  for x in string.gmatch(string.sub(v, 2, -2), "[^,]+") do
+    table.insert(vec, tonumber(x))
+  end
+  -- pgvector.halfvec without copy
+  return setmetatable(vec, halfvec_mt)
+end
+
 local halfvec_mt = {
   pgmoon_serialize = function(v)
     return 0, halfvec_serialize(v)
@@ -48,23 +64,31 @@ function pgvector.halfvec(v)
   return setmetatable(vec, halfvec_mt)
 end
 
-function halfvec_serialize(v)
-  for _, v in ipairs(v) do
-    assert(type(v) == "number")
-  end
-  return "[" .. table.concat(v, ",") .. "]"
-end
-
-function halfvec_deserialize(v)
-  local vec = {}
-  for x in string.gmatch(string.sub(v, 2, -2), "[^,]+") do
-    table.insert(vec, tonumber(x))
-  end
-  -- pgvector.halfvec without copy
-  return setmetatable(vec, halfvec_mt)
-end
-
 -- sparsevec
+
+local function sparsevec_serialize(vec)
+  local elements = {}
+  for i, v in pairs(vec["elements"]) do
+    table.insert(elements, tonumber(i) .. ":" .. tonumber(v))
+  end
+  return "{" .. table.concat(elements, ",") .. "}/" .. tonumber(vec["dim"])
+end
+
+local function sparsevec_deserialize(v)
+  local m = string.gmatch(v, "[^/]+")
+  local elements = {}
+  for e in string.gmatch(string.sub(m(), 2, -2), "[^,]+") do
+    local mx = string.gmatch(e, "[^:]+")
+    local index = tonumber(mx())
+    local value = tonumber(mx())
+    elements[index] = value
+  end
+  local vec = {
+    elements = elements,
+    dim = tonumber(m())
+  }
+  return setmetatable(vec, sparsevec_mt)
+end
 
 local sparsevec_mt = {
   pgmoon_serialize = function(v)
@@ -82,30 +106,6 @@ function pgvector.sparsevec(elements, dim)
   local vec = {
     elements = elements,
     dim = dim
-  }
-  return setmetatable(vec, sparsevec_mt)
-end
-
-function sparsevec_serialize(vec)
-  local elements = {}
-  for i, v in pairs(vec["elements"]) do
-    table.insert(elements, tonumber(i) .. ":" .. tonumber(v))
-  end
-  return "{" .. table.concat(elements, ",") .. "}/" .. tonumber(vec["dim"])
-end
-
-function sparsevec_deserialize(v)
-  local m = string.gmatch(v, "[^/]+")
-  local elements = {}
-  for e in string.gmatch(string.sub(m(), 2, -2), "[^,]+") do
-    local mx = string.gmatch(e, "[^:]+")
-    local index = tonumber(mx())
-    local value = tonumber(mx())
-    elements[index] = value
-  end
-  local vec = {
-    elements = elements,
-    dim = tonumber(m())
   }
   return setmetatable(vec, sparsevec_mt)
 end

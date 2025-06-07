@@ -16,6 +16,7 @@ assert(pg:query("CREATE TABLE documents (id bigserial PRIMARY KEY, content text,
 function embed(texts, input_type)
   local api_key = os.getenv("CO_API_KEY")
   assert(api_key, "Set CO_API_KEY")
+
   local url = "https://api.cohere.com/v2/embed"
   local data = {
     texts = texts,

@@ -5,8 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: leafo/gh-actions-lua@v10
-      - uses: leafo/gh-actions-luarocks@v4
+      - uses: leafo/gh-actions-lua@v11
+      - uses: leafo/gh-actions-luarocks@v5
       - run: |
           luarocks install pgmoon
           luarocks install luasocket
@@ -16,7 +16,7 @@ jobs:
           dev-files: true
       - run: |
           cd /tmp
-          git clone --branch v0.8.0 https://github.com/pgvector/pgvector.git
+          git clone --branch v0.8.1 https://github.com/pgvector/pgvector.git
           cd pgvector
           make
           sudo make install
